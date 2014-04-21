@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Chat2</title>
+	<script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+	<div style="width: 300px; height: 300px; border: solid 1px;" id="txtarea">
+		<dl id="txtappend">
+		</dl>
+	</div>
+	<br/>
+	<input type="text" style="width: 255px;" id="txt" placeholder="message"/>
+	<button id="sendBtn" >Send</button>
+	<script>
+		$(document).ready(function() {
+			var socket = io.connect('http://localhost:8080');
+			
+			$("#sendBtn").on({
+				click: function() {
+					var message = $("#txt").val();
+					if (message != "") {
+						socket.emit('message', message);
+					}
+				}
+			});
+			
+			socket.on('message', function(data) {
+				$('#txtappend').append("<dd style='margin: 0px;'>" + data + "</dd>");
+				$('#txt').val('');
+			});
+		});
+	</script>
+</body>
+</html>
